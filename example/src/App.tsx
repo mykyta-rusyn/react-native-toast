@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { FunctionComponent, useCallback, useState } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   Button,
   Pressable,
@@ -38,58 +37,162 @@ export default function App() {
   }, [isModalVisible, setModalVisible]);
 
   return (
-    <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ScrollView
-          scrollEnabled={false}
-          keyboardDismissMode={'interactive'}
-          contentContainerStyle={{
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ScrollView
+        scrollEnabled={false}
+        keyboardDismissMode={'interactive'}
+        contentContainerStyle={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: isDarkMode ? '#181821' : '#f6f6f6',
+        }}
+      >
+        <ToggleSwitch
+          isDarkMode={isDarkMode}
+          value={isDarkMode}
+          setValue={setIsUserDarkMode}
+          text={'Dark Mode?'}
+        />
+        <ToggleSwitch
+          isDarkMode={isDarkMode}
+          value={ToastPosition.TOP === position}
+          setValue={(val) =>
+            setPosition(val ? ToastPosition.TOP : ToastPosition.BOTTOM)
+          }
+          text={'Top Position?'}
+        />
+
+        <NumericInput
+          isDarkMode={isDarkMode}
+          value={height.toString()}
+          setValue={(text) => {
+            setHeight(parseInt(text, 10) ? parseInt(text, 10) : 0);
+          }}
+          text={'Toast Height:'}
+        />
+
+        <NumericInput
+          isDarkMode={isDarkMode}
+          value={width.toString()}
+          setValue={(text) => {
+            setWidth(parseInt(text, 10) ? parseInt(text, 10) : 0);
+          }}
+          text={'Toast Width:'}
+        />
+        <NumericInput
+          isDarkMode={isDarkMode}
+          value={duration.toString()}
+          setValue={(text) => {
+            setDuration(parseInt(text, 10) ? parseInt(text, 10) : 0);
+          }}
+          text={'Toast Duration:'}
+        />
+
+        <Pressable
+          style={{ marginTop: 64 }}
+          onPress={() => {
+            toast(Math.floor(Math.random() * 1000).toString(), {
+              position,
+              duration,
+              height,
+              width,
+              providerKey: 'PERSISTS',
+            });
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              color: isDarkMode ? colors.textDark : colors.textLight,
+            }}
+          >
+            Normal Toast
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={{ marginTop: 16 }}
+          onPress={() => {
+            const id = toast.success('Success!', {
+              position,
+              duration,
+              height,
+              width,
+            });
+
+            setTimeout(() => {
+              toast.success('Updated success!', {
+                id,
+              });
+            }, 1500);
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              color: isDarkMode ? colors.textDark : colors.textLight,
+            }}
+          >
+            Success Toast
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={{ marginTop: 16 }}
+          onPress={() => {
+            const sleep = new Promise((resolve, reject) => {
+              setTimeout(() => {
+                if (Math.random() > 0.5) {
+                  resolve({
+                    username: 'Nick',
+                    email: 'nick@backpackapp.io',
+                  });
+                } else {
+                  reject('Username is undefined');
+                }
+              }, 2500);
+            });
+            toast.promise(
+              sleep,
+              {
+                loading: 'Loading...',
+                success: (data: any) => 'Welcome ' + data.username,
+                error: (err) => err.toString(),
+              },
+              {
+                position,
+                duration,
+                height,
+                width,
+              }
+            );
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              color: isDarkMode ? colors.textDark : colors.textLight,
+            }}
+          >
+            Promise Toast
+          </Text>
+        </Pressable>
+        <Button title={'Toggle Modal'} onPress={toggleModal} />
+      </ScrollView>
+      <Modal style={{ padding: 0, margin: 0 }} isVisible={isModalVisible}>
+        <View
+          style={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: isDarkMode ? '#181821' : '#f6f6f6',
+            backgroundColor: !isDarkMode ? colors.textDark : colors.textLight,
           }}
         >
-          <ToggleSwitch
-            isDarkMode={isDarkMode}
-            value={isDarkMode}
-            setValue={setIsUserDarkMode}
-            text={'Dark Mode?'}
-          />
-          <ToggleSwitch
-            isDarkMode={isDarkMode}
-            value={ToastPosition.TOP === position}
-            setValue={(val) =>
-              setPosition(val ? ToastPosition.TOP : ToastPosition.BOTTOM)
-            }
-            text={'Top Position?'}
-          />
-
-          <NumericInput
-            isDarkMode={isDarkMode}
-            value={height.toString()}
-            setValue={(text) => {
-              setHeight(parseInt(text, 10) ? parseInt(text, 10) : 0);
-            }}
-            text={'Toast Height:'}
-          />
-
-          <NumericInput
-            isDarkMode={isDarkMode}
-            value={width.toString()}
-            setValue={(text) => {
-              setWidth(parseInt(text, 10) ? parseInt(text, 10) : 0);
-            }}
-            text={'Toast Width:'}
-          />
-          <NumericInput
-            isDarkMode={isDarkMode}
-            value={duration.toString()}
-            setValue={(text) => {
-              setDuration(parseInt(text, 10) ? parseInt(text, 10) : 0);
-            }}
-            text={'Toast Duration:'}
-          />
+          <Button title={'Toggle Modal'} onPress={toggleModal} />
 
           <Pressable
             style={{ marginTop: 64 }}
@@ -114,140 +217,40 @@ export default function App() {
             </Text>
           </Pressable>
 
-          <Pressable
-            style={{ marginTop: 16 }}
-            onPress={() => {
-              const id = toast.success('Success!', {
-                position,
-                duration,
-                height,
-                width,
-              });
-
-              setTimeout(() => {
-                toast.success('Updated success!', {
-                  id,
-                });
-              }, 1500);
+          <Toasts
+            providerKey={'MODAL::1'}
+            onToastShow={(t) => {
+              console.log('SHOW: ', t);
             }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: isDarkMode ? colors.textDark : colors.textLight,
-              }}
-            >
-              Success Toast
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={{ marginTop: 16 }}
-            onPress={() => {
-              const sleep = new Promise((resolve, reject) => {
-                setTimeout(() => {
-                  if (Math.random() > 0.5) {
-                    resolve({
-                      username: 'Nick',
-                      email: 'nick@backpackapp.io',
-                    });
-                  } else {
-                    reject('Username is undefined');
-                  }
-                }, 2500);
-              });
-              toast.promise(
-                sleep,
-                {
-                  loading: 'Loading...',
-                  success: (data: any) => 'Welcome ' + data.username,
-                  error: (err) => err.toString(),
-                },
-                {
-                  position,
-                  duration,
-                  height,
-                  width,
-                }
-              );
+            onToastHide={(t) => {
+              console.log('HIDE: ', t);
             }}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                color: isDarkMode ? colors.textDark : colors.textLight,
-              }}
-            >
-              Promise Toast
-            </Text>
-          </Pressable>
-          <Button title={'Toggle Modal'} onPress={toggleModal} />
-        </ScrollView>
-        <Modal style={{ padding: 0, margin: 0 }} isVisible={isModalVisible}>
-          <View
-            style={{
-              flex: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: !isDarkMode ? colors.textDark : colors.textLight,
+            onToastPress={(t) => {
+              console.log('PRESS: ', t);
             }}
-          >
-            <Button title={'Toggle Modal'} onPress={toggleModal} />
-
-            <Pressable
-              style={{ marginTop: 64 }}
-              onPress={() => {
-                toast(Math.floor(Math.random() * 1000).toString(), {
-                  position,
-                  duration,
-                  height,
-                  width,
-                  providerKey: 'PERSISTS',
-                });
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  color: isDarkMode ? colors.textDark : colors.textLight,
-                }}
-              >
-                Normal Toast
-              </Text>
-            </Pressable>
-
-            <Toasts
-              providerKey={'MODAL::1'}
-              onToastShow={(t) => {
-                console.log('SHOW: ', t);
-              }}
-              onToastHide={(t) => {
-                console.log('HIDE: ', t);
-              }}
-              onToastPress={(t) => {
-                console.log('PRESS: ', t);
-              }}
-              overrideDarkMode={isDarkMode}
-            />
-          </View>
-        </Modal>
-        <Toasts
-          onToastShow={(t) => {
-            console.log('SHOW: ', t);
-          }}
-          onToastHide={(t) => {
-            console.log('HIDE: ', t);
-          }}
-          onToastPress={(t) => {
-            console.log('PRESS: ', t);
-          }}
-          overrideDarkMode={isDarkMode}
-        />
-      </GestureHandlerRootView>
-    </SafeAreaProvider>
+            overrideDarkMode={isDarkMode}
+            insets={{
+              bottom: 0,
+              left: 0,
+              right: 0,
+              top: 0,
+            }}
+          />
+        </View>
+      </Modal>
+      <Toasts
+        onToastShow={(t) => {
+          console.log('SHOW: ', t);
+        }}
+        onToastHide={(t) => {
+          console.log('HIDE: ', t);
+        }}
+        onToastPress={(t) => {
+          console.log('PRESS: ', t);
+        }}
+        overrideDarkMode={isDarkMode}
+      />
+    </GestureHandlerRootView>
   );
 }
 

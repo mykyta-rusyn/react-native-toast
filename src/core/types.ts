@@ -91,9 +91,9 @@ export interface ToasterProps {
   children?: (toast: Toast) => JSX.Element;
 }
 
-export type ExtraInsets = {
-  top?: number;
-  bottom?: number;
-  right?: number;
-  left?: number;
+export type Insets = {
+  top: number;
+  bottom: number;
+  right: number;
+  left: number;
 };

@@ -16,14 +16,13 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Directions,
   Gesture,
   GestureDetector,
 } from 'react-native-gesture-handler';
 
-import type { ExtraInsets, Toast as ToastType } from '../core/types';
+import type { Insets, Toast as ToastType } from '../core/types';
 import { resolveValue, Toast as T, ToastPosition } from '../core/types';
 import {
   colors,
@@ -47,7 +46,7 @@ type Props = {
   onToastShow?: (toast: T) => void;
   onToastHide?: (toast: T) => void;
   onToastPress?: (toast: T) => void;
-  extraInsets?: ExtraInsets;
+  insets: Insets;
   defaultStyle?: {
     pressable?: ViewStyle;
     view?: ViewStyle;
@@ -66,10 +65,9 @@ export const Toast: FC<Props> = ({
   onToastHide,
   onToastPress,
   onToastShow,
-  extraInsets,
+  insets,
   defaultStyle,
 }) => {
-  const insets = useSafeAreaInsets();
   const { width, height } = useWindowDimensions();
   const { keyboardShown: keyboardVisible, keyboardHeight } = useKeyboard();
 
@@ -129,7 +127,6 @@ export const Toast: FC<Props> = ({
           offset -
           kbHeight -
           insets.bottom -
-          (extraInsets?.bottom ?? 0) -
           24
         : startingY;
 
@@ -147,12 +144,11 @@ export const Toast: FC<Props> = ({
     keyboardVisible,
     keyboardHeight,
     toastHeight,
-    insets.bottom,
     position,
     startingY,
     toast.position,
     offsetY,
-    extraInsets,
+    insets,
     toast.animationConfig,
   ]);
 

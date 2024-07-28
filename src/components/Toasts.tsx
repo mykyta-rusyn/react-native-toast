@@ -3,13 +3,12 @@ import { TextStyle, View, ViewStyle } from 'react-native';
 
 import { Toast as T, useToaster } from '../headless';
 import { Toast } from './Toast';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ExtraInsets } from '../core/types';
+import { Insets } from '../core/types';
 import { useScreenReader } from 'src/core/utils';
 
 type Props = {
   overrideDarkMode?: boolean;
-  extraInsets?: ExtraInsets;
+  insets: Insets;
   onToastShow?: (toast: T) => void;
   onToastHide?: (toast: T) => void;
   onToastPress?: (toast: T) => void;
@@ -25,7 +24,7 @@ type Props = {
 
 export const Toasts: FunctionComponent<Props> = ({
   overrideDarkMode,
-  extraInsets,
+  insets,
   onToastHide,
   onToastPress,
   onToastShow,
@@ -35,7 +34,6 @@ export const Toasts: FunctionComponent<Props> = ({
 }) => {
   const { toasts, handlers } = useToaster({ providerKey });
   const { startPause, endPause } = handlers;
-  const insets = useSafeAreaInsets();
   const isScreenReaderEnabled = useScreenReader();
 
   if (isScreenReaderEnabled && !preventScreenReaderFromHiding) {
@@ -46,10 +44,10 @@ export const Toasts: FunctionComponent<Props> = ({
     <View
       style={{
         position: 'absolute',
-        top: insets.top + (extraInsets?.top ?? 0) + 16,
-        left: insets.left + (extraInsets?.left ?? 0),
-        right: insets.right + (extraInsets?.right ?? 0),
-        bottom: insets.bottom + (extraInsets?.bottom ?? 0) + 16,
+        top: insets.top + 16,
+        left: insets.left,
+        right: insets.right,
+        bottom: insets.bottom + 16,
       }}
       pointerEvents={'box-none'}
     >
@@ -67,7 +65,7 @@ export const Toasts: FunctionComponent<Props> = ({
           onToastHide={onToastHide}
           onToastPress={onToastPress}
           onToastShow={onToastShow}
-          extraInsets={extraInsets}
+          insets={insets}
           defaultStyle={defaultStyle}
         />
       ))}

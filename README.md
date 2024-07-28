@@ -32,17 +32,17 @@ yarn add @backpackapp-io/react-native-toast
 npm i @backpackapp-io/react-native-toast
 ```
 #### Peer Dependencies
-Install and link [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/), [react-native-safe-area-context](https://github.com/th3rdwave/react-native-safe-area-context), and [react-native-gesture-handler](https://docs.swmansion.com/react-native-gesture-handler/docs/installation)
+Install and link [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/), and [react-native-gesture-handler](https://docs.swmansion.com/react-native-gesture-handler/docs/installation)
 
 ```sh
-yarn add react-native-reanimated react-native-safe-area-context react-native-gesture-handler
+yarn add react-native-reanimated react-native-gesture-handler
 ```
 *Ensure you follow the installation of each package*
 
 
 *Using expo?*
 ```sh
-npx expo install react-native-reanimated react-native-safe-area-context react-native-gesture-handler
+npx expo install react-native-reanimated react-native-gesture-handler
 ```
 <br />
 
@@ -54,7 +54,6 @@ Call ``toast("My Toast Message")`` whenever you are ready from *anywhere* in you
 ```js
 import { View, StyleSheet, Text } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { toast, Toasts } from '@backpackapp-io/react-native-toast';
 import { useEffect } from 'react';
 
@@ -64,12 +63,10 @@ export default function App() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <GestureHandlerRootView style={styles.container}>
-        <View>{/*The rest of your app*/}</View>
-        <Toasts /> {/* <---- Add Here */}
-      </GestureHandlerRootView>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={styles.container}>
+      <View>{/*The rest of your app*/}</View>
+      <Toasts /> {/* <---- Add Here */}
+    </GestureHandlerRootView>
   );
 }
 
@@ -151,19 +148,19 @@ Include the `<Toasts />` component in the root of your app.
 
 ### Props
 
-#### overrideDarkMode (`boolean | undefined`) _<font size = 2>(optional)</font>_
-Override the system dark mode. If a value is supplied (I.e. `true` or `false`), then the toast components will use that value for the dark mode. For example, if `overrideDarkMode = {false}`, dark mode will be disabled, regardless of the system's preferences.
-
-#### extraInsets (`object`) _<font size = 2>(optional)</font>_
-Supply the container for the toasts extra padding.
+#### insets (`object`) _<font size = 2>(required)</font>_
+Supply the container for the toasts padding.
 ```
-extraInsets?: {
-  top?: number;
-  bottom?: number;
-  right?: number;
-  left?: number;
+Insets: {
+  top: number;
+  bottom: number;
+  right: number;
+  left: number;
 };
 ```
+
+#### overrideDarkMode (`boolean | undefined`) _<font size = 2>(optional)</font>_
+Override the system dark mode. If a value is supplied (I.e. `true` or `false`), then the toast components will use that value for the dark mode. For example, if `overrideDarkMode = {false}`, dark mode will be disabled, regardless of the system's preferences.
 
 #### onToastShow (`function`) _<font size = 2>(optional)</font>_
 When a toast is shown, this callback will fire, returning the toast object that was shown. _Note, the toast object is "shown" when the toast is mounted._
