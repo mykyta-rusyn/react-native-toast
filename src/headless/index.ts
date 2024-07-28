@@ -1,4 +1,4 @@
-import { toast } from '../core/toast';
+import { toast, ToastHandler } from '../core/toast';
 
 export type {
   DefaultToastOptions,
@@ -16,5 +16,5 @@ export { resolveValue } from '../core/types';
 export { useToaster } from '../core/use-toaster';
 export { useStore as useToasterStore } from '../core/store';
 
-export { toast };
+export { toast, ToastHandler };
 export default toast;

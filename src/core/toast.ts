@@ -13,7 +13,7 @@ import { ActionType, dispatch } from './store';
 
 type Message = ValueOrFunction<Element, Toast>;
 
-type ToastHandler = (message: Message, options?: ToastOptions) => string;
+export type ToastHandler = (message: Message, options?: ToastOptions) => string;
 
 const createToast = (
   message: Message,
