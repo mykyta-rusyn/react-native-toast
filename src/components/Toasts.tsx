@@ -4,7 +4,7 @@ import { TextStyle, View, ViewStyle } from 'react-native';
 import { Toast as T, useToaster } from '../headless';
 import { Toast } from './Toast';
 import { Insets } from '../core/types';
-import { useScreenReader } from 'src/core/utils';
+import { useScreenReader } from '../core/utils';
 
 type Props = {
   allowFontScaling?: boolean;
