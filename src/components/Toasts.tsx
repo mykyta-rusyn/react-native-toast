@@ -7,6 +7,7 @@ import { Insets } from '../core/types';
 import { useScreenReader } from 'src/core/utils';
 
 type Props = {
+  allowFontScaling?: boolean;
   overrideDarkMode?: boolean;
   insets: Insets;
   onToastShow?: (toast: T) => void;
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export const Toasts: FunctionComponent<Props> = ({
+  allowFontScaling,
   overrideDarkMode,
   insets,
   onToastHide,
@@ -53,6 +55,7 @@ export const Toasts: FunctionComponent<Props> = ({
     >
       {toasts.map((t) => (
         <Toast
+          allowFontScaling={allowFontScaling}
           key={t.id}
           toast={t}
           startPause={startPause}

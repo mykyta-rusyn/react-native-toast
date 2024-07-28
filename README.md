@@ -57,6 +57,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { toast, Toasts } from '@backpackapp-io/react-native-toast';
 import { useEffect } from 'react';
 
+const
+
 export default function App() {
   useEffect(() => {
     toast('Hello');
@@ -158,6 +160,9 @@ Insets: {
   left: number;
 };
 ```
+
+#### allowFontScaling (`boolean | undefined`) _<font size = 2>(optional)</font>_
+Set this to `false` for override disable font scaling for all toasts.
 
 #### overrideDarkMode (`boolean | undefined`) _<font size = 2>(optional)</font>_
 Override the system dark mode. If a value is supplied (I.e. `true` or `false`), then the toast components will use that value for the dark mode. For example, if `overrideDarkMode = {false}`, dark mode will be disabled, regardless of the system's preferences.

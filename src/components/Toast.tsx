@@ -36,6 +36,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const DEFAULT_TOAST_HEIGHT = 50;
 
 type Props = {
+  allowFontScaling?: boolean;
   toast: ToastType;
   updateHeight: (toastId: string, height: number) => void;
   offset: number;
@@ -56,6 +57,7 @@ type Props = {
 };
 
 export const Toast: FC<Props> = ({
+  allowFontScaling,
   toast,
   updateHeight,
   offset,
@@ -312,11 +314,12 @@ export const Toast: FC<Props> = ({
               />
             )}
             {typeof toast.icon === 'string' ? (
-              <Text>{toast.icon}</Text>
+              <Text allowFontScaling={allowFontScaling}>{toast.icon}</Text>
             ) : (
               toast.icon
             )}
             <Text
+              allowFontScaling={allowFontScaling}
               style={[
                 {
                   color: isDarkMode ? colors.textLight : colors.textDark,
